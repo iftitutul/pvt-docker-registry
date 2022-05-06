@@ -14,7 +14,6 @@ spec:
         app: docker-registry
     spec:
       containers:
-
       - image: redis:latest
         imagePullPolicy: Always
         name: redis
@@ -26,24 +25,37 @@ spec:
         imagePullPolicy: Always
         name: docker-registry
         env:
+        - name: REGISTRY_AUTH
+          value: htpasswd
+        - name: REGISTRY_AUTH_HTPASSWD_PATH
+          value: /auth/htpasswd
+        - name: REGISTRY_AUTH_HTPASSWD_REALM
+          value: Registry Realm
         - name: REGISTRY_STORAGE_CACHE_BLOBDESCRIPTOR
           value: redis
         - name: REGISTRY_REDIS_ADDR
-          value: redis:6379
-        - name: REGISTRY_HTTP_ADDR
-          value: :5000
-        - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
-          value: /var/lib/registry
-        
+          value: redis:6379          
+        - name: REGISTRY_STORAGE
+          value: s3
+        - name: REGISTRY_STORAGE_S3_ACCESSKEY
+          value: XXXX
+        - name: REGISTRY_STORAGE_S3_SECRETKEY
+          value: XXXX
+        - name: REGISTRY_STORAGE_S3_BUCKET
+          value: axregistry
+        - name: REGISTRY_STORAGE_S3_REGION
+          value: us-west-1
+  
         ports:
         - containerPort: 5000
           name: http
           protocol: TCP
         volumeMounts:
-        - mountPath: /var/lib/registry
-          name: image-store
+        - mountPath: /auth
+          name: auth
       volumes:
-      - emptyDir: {}
-        name: image-store
+      - name: auth
+        configMap:
+          name: auth
       - emptyDir: {}
         name: redis-data
