@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:  
+  name: docker-registry
+  namespace: docker-registry
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: docker-registry
+  template:
+    metadata:
+      labels:
+        app: docker-registry
+    spec:
+      containers:
+
+      - image: redis:latest
+        imagePullPolicy: Always
+        name: redis
+        volumeMounts:
+        - mountPath: /redis/data
+          name: redis-data
+
+      - image: registry:latest
+        imagePullPolicy: Always
+        name: docker-registry
+        env:
+        - name: REGISTRY_STORAGE_CACHE_BLOBDESCRIPTOR
+          value: redis
+        - name: REGISTRY_REDIS_ADDR
+          value: redis:6379
+        - name: REGISTRY_HTTP_ADDR
+          value: :5000
+        - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+          value: /var/lib/registry
+        
+        ports:
+        - containerPort: 5000
+          name: http
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /var/lib/registry
+          name: image-store
+      volumes:
+      - emptyDir: {}
+        name: image-store
+      - emptyDir: {}
+        name: redis-data
