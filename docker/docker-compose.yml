@@ -9,7 +9,7 @@ services:
 
   registry:
     restart: always
-    image: registry:2
+    image: registry:latest
     ports:
       - 5000:5000
     environment:
@@ -21,6 +21,6 @@ services:
       REGISTRY_STORAGE_CACHE_BLOBDESCRIPTOR: redis
       REGISTRY_REDIS_ADDR: redis:6379
     volumes:
-      - ./data:/var/lib/registry
-      - ./auth:/auth
+      - ./registry/data:/var/lib/registry
+      - ./registry/auth:/auth
   
