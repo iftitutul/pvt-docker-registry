@@ -21,5 +21,8 @@
   ```
 - Check the s3 bucket and verify docker registry repository
 
+**Notes:** For multiple docker registries, must configure `http.secret` is being set correctly. Please see: https://docs.docker.com/registry/configuration/
+
+
 
 

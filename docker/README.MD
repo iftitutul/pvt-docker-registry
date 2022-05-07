@@ -13,7 +13,7 @@
   HTPasswd authentication need to use Bcrypt mode
   Replace <username> with your 'username' that will be used for the auth.
 
-  `htpasswd -B registry/auth/htpasswd iftikhar`
+  `htpasswd -B registry/auth/htpasswd tt`
 
   *Notes:* '-B' seems like use bcrypt encryption method.
 

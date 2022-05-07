@@ -4,7 +4,7 @@ metadata:
   name: docker-registry
   namespace: docker-registry
 spec:
-  replicas: 1 
+  replicas: 2
   selector:
     matchLabels:
       app: docker-registry
@@ -14,17 +14,19 @@ spec:
         app: docker-registry
     spec:
       containers:
-      - image: redis:latest
-        imagePullPolicy: Always
-        name: redis
-        volumeMounts:
-        - mountPath: /redis/data
-          name: redis-data
+      # - image: redis:latest
+      #   imagePullPolicy: Always
+      #   name: redis
+      #   volumeMounts:
+      #   - mountPath: /redis/data
+      #     name: redis-data
 
       - image: registry:latest
         imagePullPolicy: Always
         name: docker-registry
         env:
+        - name: REGISTRY_HTTP_SECRET
+          value: registry-http-secret
         - name: REGISTRY_AUTH
           value: htpasswd
         - name: REGISTRY_AUTH_HTPASSWD_PATH
@@ -38,9 +40,9 @@ spec:
         - name: REGISTRY_STORAGE
           value: s3
         - name: REGISTRY_STORAGE_S3_ACCESSKEY
-          value: XXXX
+          value: xxxx
         - name: REGISTRY_STORAGE_S3_SECRETKEY
-          value: XXXX
+          value: xxxx
         - name: REGISTRY_STORAGE_S3_BUCKET
           value: axregistry
         - name: REGISTRY_STORAGE_S3_REGION
@@ -51,11 +53,16 @@ spec:
           name: http
           protocol: TCP
         volumeMounts:
-        - mountPath: /auth
-          name: auth
+        - name: auth
+          mountPath: /auth/htpasswd
+          subPath: htpasswd
+          
       volumes:
       - name: auth
         configMap:
           name: auth
-      - emptyDir: {}
-        name: redis-data
+          items:
+              - key: htpasswd
+                path: htpasswd
+      # - emptyDir: {}
+      #   name: redis-data
