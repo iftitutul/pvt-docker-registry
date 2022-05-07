@@ -12,7 +12,7 @@ metadata:
   namespace: docker-registry
 spec:
   rules:
-  - host: registry.augmedix.com
+  - host: registry.example.com
     http:
       paths:
       - backend:
