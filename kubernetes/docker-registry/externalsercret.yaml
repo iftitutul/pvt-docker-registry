@@ -1,0 +1,14 @@
+apiVersion: "kubernetes-client.io/v1"
+kind: ExternalSecret
+metadata:
+  name: aws-external-secret
+  namespace: docker-registry
+spec:
+  backendType: secretsManager 
+  data:
+    - key: aws-ssm-secret
+      name: REGISTRY_STORAGE_S3_ACCESSKEY
+      property: access-key
+    - key: aws-ssm-secret
+      name: REGISTRY_STORAGE_S3_SECRETKEY
+      property: secret-access-key

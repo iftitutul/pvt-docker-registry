@@ -40,9 +40,15 @@ spec:
         - name: REGISTRY_STORAGE
           value: s3
         - name: REGISTRY_STORAGE_S3_ACCESSKEY
-          value: xxxx
+          valueFrom:
+            secretKeyRef:
+              name: aws-external-secret
+              key: REGISTRY_STORAGE_S3_ACCESSKEY
         - name: REGISTRY_STORAGE_S3_SECRETKEY
-          value: xxxx
+          valueFrom:
+            secretKeyRef:
+              name: aws-external-secret
+              key: REGISTRY_STORAGE_S3_SECRETKEY
         - name: REGISTRY_STORAGE_S3_BUCKET
           value: axregistry
         - name: REGISTRY_STORAGE_S3_REGION

@@ -16,6 +16,7 @@
   $ docker pull busybox
   $ docker tag busybox registry.example.com/busybox:latest
   $ docker push registry.example.com/busybox:latest
+  $ docker logout registry.example.com
   $ docker login registry.example.com
   $ docker pull registry.example.com/busybox:latest
   ```
