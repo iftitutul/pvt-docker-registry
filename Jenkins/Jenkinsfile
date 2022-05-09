@@ -1,0 +1,38 @@
+node {
+    properties([
+     parameters([
+          choice(
+              choices: ['5', '10'], 
+              name: 'NUM_OF_KEEP_IMAGES',
+              description: 'Number of keep docker images'
+          ),
+          string(
+              //defaultValue: 'app', 
+              name: 'REPO_NAME', 
+              description: "Repository Name",
+              trim: true
+          )
+      ])
+    ])
+
+    def REGISTRY_NAME = "registry.example.com"
+    NUM_OF_KEEP_IMAGES = ($env.NUM_OF_KEEP_IMAGES) + 1
+
+    try{
+        stage('Check the Docker repo exists or not') {
+                image = sh (script: "docker images -q $REGISTRY_NAME/$env.REPO_NAME", returnStdout: true).trim()
+                if (image.isEmpty()) throw new Exception("Image not found")   
+        } // stage
+        
+        stage('Keep the number of Docker Images') {
+                sh """
+                    docker rmi \$(docker images --filter "reference=${REGISTRY_NAME}/${env.REPO_NAME}" -q | tail -n +${NUM_OF_KEEP_IMAGES})
+                   """
+        } // stage
+
+    }
+    catch (e){
+        currentBuild.result = "FAILED"
+        throw e
+    }
+}
