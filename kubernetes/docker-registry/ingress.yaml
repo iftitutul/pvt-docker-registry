@@ -6,7 +6,7 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/scheme: internet-facing
     #alb.ingress.kubernetes.io/backend-protocol: HTTPS
-    alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:us-west-1:070866847466:certificate/de7caf51-d787-4165-98a2-6016d10ff6ee'
+    alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:us-west-1:XXXX:certificate/XXXX'
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'  
   name: docker-registry
   namespace: docker-registry
