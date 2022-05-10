@@ -16,23 +16,41 @@ node {
     ])
 
     def REGISTRY_NAME = "registry.example.com"
-    NUM_OF_KEEP_IMAGES = ($env.NUM_OF_KEEP_IMAGES) + 1
+    NUM_OF_KEEP_IMAGES = (env.NUM_OF_KEEP_IMAGES) + 1
 
-    try{
-        stage('Check the Docker repo exists or not') {
-                image = sh (script: "docker images -q $REGISTRY_NAME/$env.REPO_NAME", returnStdout: true).trim()
-                if (image.isEmpty()) throw new Exception("Image not found")   
-        } // stage
         
-        stage('Keep the number of Docker Images') {
-                sh """
-                    docker rmi \$(docker images --filter "reference=${REGISTRY_NAME}/${env.REPO_NAME}" -q | tail -n +${NUM_OF_KEEP_IMAGES})
-                   """
-        } // stage
+    try{
+        stage('keep the number of images') {
+                script {
+                    def imageExists = sh(
+                        script: "docker images -q $REGISTRY_NAME/$env.REPO_NAME", 
+                        returnStdout: true
+                        ).trim()
+                    if(imageExists.isEmpty()){
+                        echo "$REGISTRY_NAME/$env.REPO_NAME repo not found"
+                    } //if 
+                    else {
+                        echo "$REGISTRY_NAME/$env.REPO_NAME repo exists"
+                        def image_id = sh(
+                            script: "docker images --filter 'reference=${REGISTRY_NAME}/${env.REPO_NAME}' -q | tail -n +$NUM_OF_KEEP_IMAGES",
+                            returnStdout: true
+                            ).trim()
+                        
+                        if (image_id.isEmpty()){
+                            echo "No Image id found"
+                        }
+                        else {
+                            sh "docker rmi \$(docker images --filter 'reference=${REGISTRY_NAME}/${env.REPO_NAME}' -q | tail -n +$NUM_OF_KEEP_IMAGES)"
+                            echo "Image id: {$image_id} removed"
+                        }
+                        
+                    } //else
+                } //script
+        } //stage       
+    } //try
 
-    }
     catch (e){
         currentBuild.result = "FAILED"
         throw e
-    }
+    } //catch
 }
