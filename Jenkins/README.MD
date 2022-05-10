@@ -4,7 +4,7 @@
 
     There is a need to go through all of the repositories in the registry and retain only the last **X** images. 
 
-- Remove Docker image repo but want to keep the most recent **5** images by CLI
+- Remove Docker image repo but want to keep the most recent `5` images by CLI
   
   `docker rmi $(docker images --filter "reference=registry.example.com/app" -q | tail -n +6)`
 
