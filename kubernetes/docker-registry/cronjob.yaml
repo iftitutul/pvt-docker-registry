@@ -1,27 +1,27 @@
-apiVersion: batch/v1beta1  ## k8s version v1.21, cronjobs reaches GA (group version: `batch/v1`)
-kind: CronJob
-metadata:
-  name: cron-test
-  namespace: docker-registry
-spec:
-  schedule: "*/1 * * * *"
-  concurrencyPolicy: "Forbid"
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 5
-  jobTemplate:
-    spec:
-      backoffLimit: 5
-      ttlSecondsAfterFinished: 100
-      parallelism: 1
-      completions: 1
-      template:
-        spec:
-          containers:
-          - name: hello
-            image: busybox
-            imagePullPolicy: IfNotPresent
-            command:
-            - /bin/sh
-            - -c
-            - date; echo Hello, this is simple cron test
-          restartPolicy: OnFailure
+# apiVersion: batch/v1beta1  ## k8s version v1.21, cronjobs reaches GA (group version: `batch/v1`)
+# kind: CronJob
+# metadata:
+#   name: cron-test
+#   namespace: docker-registry
+# spec:
+#   schedule: "*/1 * * * *"
+#   concurrencyPolicy: "Forbid"
+#   successfulJobsHistoryLimit: 3
+#   failedJobsHistoryLimit: 5
+#   jobTemplate:
+#     spec:
+#       backoffLimit: 5
+#       ttlSecondsAfterFinished: 100
+#       parallelism: 1
+#       completions: 1
+#       template:
+#         spec:
+#           containers:
+#           - name: hello
+#             image: busybox
+#             imagePullPolicy: IfNotPresent
+#             command:
+#             - /bin/sh
+#             - -c
+#             - date; echo Hello, this is simple cron test
+#           restartPolicy: OnFailure
