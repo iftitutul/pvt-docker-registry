@@ -1,0 +1,1 @@
+Here is the Kubernetes manifests to run Docker registry using Redis and uses multiple Docker registry for redundancy
